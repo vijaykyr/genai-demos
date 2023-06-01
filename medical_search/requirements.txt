@@ -1,0 +1,2 @@
+streamlit
+urllib3==1.26.6 #downgrading was needed to run locally, can probably remove for cloud
