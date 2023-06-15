@@ -15,6 +15,14 @@
 
 import os
 import requests
+import base64
+
+def show_pdf(url):
+    pdf_file = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})  # Need to override default header because
+    # server blocks scrapers (https://scrapeops.io/web-scraping-playbook/403-forbidden-error-web-scraping/)
+    base64_pdf = base64.b64encode(pdf_file.content).decode('utf-8')
+    pdf_iframe = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
+    return pdf_iframe
 
 
 def get_env_project_id() -> str:
