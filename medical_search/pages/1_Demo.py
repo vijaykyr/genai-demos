@@ -18,7 +18,7 @@ from retrieval import generate_answer, create_retrieval_chain
 
 st.set_page_config(
     page_title="Q&A over Biomedical Literature",
-    page_icon='/app/images/logo.png',
+    page_icon='app/images/logo.png',
     layout="wide",
 )
 
