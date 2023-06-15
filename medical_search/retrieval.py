@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from __future__ import annotations
-
+import json
 #Temporary hack to till https://github.com/streamlit/streamlit/pull/6664 is merged
 import pydantic; pydantic.class_validators._FUNCS.clear()
 
@@ -40,49 +40,8 @@ import utils
 # This is a temporary (bad) hack for the prototype. We will need a better way - hopefully using ES metatada
 # to get the article name
 #
-#TODO: load this from data/articles.json
-_articles = [
-    {   'bioasq_idl': '51406e6223fec90375000009',
-        'title': 'Metformin Does Not Suppress Serum Thyrotropin by Increasing Levothyroxine Absorption',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4589100/pdf/thy.2015.0211.pdf',
-        'ncbi_ref': 'http://www.ncbi.nlm.nih.gov/pubmed/26191653'},
-    {   'bioasq_idl': '56c1f01def6e394741000045',
-        'title': 'Orteronel for the treatment of prostate cancer',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4148348/pdf/nihms612517.pdf',
-        'ncbi_ref': 'https://pubmed.ncbi.nlm.nih.gov/24799061/'},
-    {   'bioasq_idl': '56c1f01def6e394741000045',
-        'title': 'A phase 1 multiple-dose study of orteronel in Japanese patients with castration-resistant prostate cancer',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4305367/pdf/280_2014_Article_2654.pdf',
-        'ncbi_ref': 'https://pubmed.ncbi.nlm.nih.gov/25537627/'},
-    {   'bioasq_idl': '56c1f01def6e394741000045',
-        'title': 'Phase III, randomized, double-blind, multicenter trial comparing orteronel (TAK-700) plus prednisone with placebo plus prednisone in patients with metastatic castration-resistant prostate cancer that has progressed during or after docetaxel-based therapy: ELM-PC 5',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4879718/pdf/zlj723.pdf',
-        'ncbi_ref': 'https://pubmed.ncbi.nlm.nih.gov/25624429/'},
-    {   'bioasq_idl': '56c1f01def6e394741000045',
-        'title': 'Beyond abiraterone: new hormonal therapies for metastatic castration-resistant prostate cancer',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3928129/pdf/cbt-15-149.pdf',
-        'ncbi_ref': 'https://pubmed.ncbi.nlm.nih.gov/24100689/'},
-    {   'bioasq_idl': '52bf1db603868f1b06000011',
-        'title': 'Optimal bone health management strategies in patients with prostate cancer',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3737681/pdf/IJU-29-89.pdf',
-        'ncbi_ref': 'http://www.ncbi.nlm.nih.gov/pubmed/23956508'},
-    {   'bioasq_idl': '52bf1db603868f1b06000011',
-        'title': 'A changing landscape in castration-resistant prostate cancer treatment',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3399094/pdf/fendo-03-00085.pdf',
-        'ncbi_ref': 'http://www.ncbi.nlm.nih.gov/pubmed/22826702'},
-    {   'bioasq_idl': '52bf1db603868f1b06000011',
-        'title': 'Therapeutic Fc-fusion proteins and peptides as successful alternatives to antibodies',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3225844/pdf/mabs0305_0415.pdf',
-        'ncbi_ref': 'https://pubmed.ncbi.nlm.nih.gov/21785279/'},
-    {   'bioasq_idl': '52bf1db603868f1b06000011',
-        'title': 'Emerging novel therapies in the treatment of castrate-resistant prostate cancer',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3104424/pdf/cuaj-2-120.pdf',
-        'ncbi_ref': 'https://pubmed.ncbi.nlm.nih.gov/21470540/'},
-    {   'bioasq_idl': '54d4e03a3706e89528000001',
-        'title': 'Therapeutic drug monitoring: antiarrhythmic drugs',
-        'download': 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1874159/pdf/bcp0046-0307.pdf',
-        'ncbi_ref': 'https://pubmed.ncbi.nlm.nih.gov/9803978/'}
-]
+with open('data/articles.json', 'r') as f:
+    _articles = json.load(f)
 
 def _get_sources(document_list: List[str]) -> List[str]:
     sources = []
