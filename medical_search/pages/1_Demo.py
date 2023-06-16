@@ -14,7 +14,7 @@
 
 import streamlit as st
 
-from retrieval import generate_answer, create_retrieval_chain
+from retrieval import generate_answer
 
 st.set_page_config(
     page_title="Q&A over Biomedical Literature",
@@ -32,9 +32,6 @@ questions = [
     "What are all classes of anti-arrhythmic drugs according to Vaughan-Williams classification?"
 ]
 
-if 'chain' not in st.session_state:
-    st.session_state.chain = create_retrieval_chain()
-
 st.divider()
 
 cols = st.columns([30, 10, 70])
@@ -46,7 +43,7 @@ with cols[0]:
     question = st.selectbox("Question", questions)
 
 if question != questions[0]:
-    result = generate_answer(st.session_state.chain, question)
+    result = generate_answer(question)
     answer = result["answer"]
     sources = result["sources"]
 
@@ -57,6 +54,11 @@ with cols[2]:
 st.divider()
 
 if sources:
+    # TODO: Render sources is agrid with preview
     st.caption("Sources:")
     for source in sources:
         st.markdown(source)
+
+
+else:
+    st.caption('No Sources')

@@ -4,6 +4,5 @@ urllib3==1.26.6 #downgrading was needed to run locally, can probably remove for 
 google-api-python-client
 google-cloud-storage
 pandas
-langchain
 google-cloud-discoveryengine
 google-cloud-aiplatform

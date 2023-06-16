@@ -11,8 +11,7 @@ st.set_page_config(
 st.markdown('### Select a paper to browse')
 st.markdown('''
     - These are all the papers uploaded to Enterprise Search for this demo. 
-    - Given a query Enterprise Search will identify which papers in its corpus 
-    contain relevant information.''')
+    - Given a query Enterprise Search will identify which text snippets are most relevant.''')
 df = pd.read_json("data/articles.json")
 gb = GridOptionsBuilder.from_dataframe(df[['title']])
 gb.configure_selection()
