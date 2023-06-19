@@ -5,7 +5,7 @@ runtime_config:
     operating_system: "ubuntu18"
     runtime_version: "3.9"
 
-entrypoint: streamlit run 1_Demo.py --server.port $PORT
+entrypoint: streamlit run About.py --server.port $PORT
 
 # The App Engine Service Account Requires the Following Permissions
 # -Logs Writer
