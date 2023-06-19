@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from st_aggrid import GridOptionsBuilder, AgGrid
+from st_aggrid import GridOptionsBuilder, AgGrid, ColumnsAutoSizeMode
 import utils
 
 st.set_page_config(
@@ -23,7 +23,7 @@ gridOptions = gb.build()
 data = AgGrid(
     df,
     gridOptions=gridOptions,
-    fit_columns_on_grid_load=True)
+    columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW)
 
 selected_rows = data["selected_rows"]
 

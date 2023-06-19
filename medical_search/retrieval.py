@@ -13,7 +13,9 @@
 # limitations under the License.
 from __future__ import annotations
 
-import logging; logging.basicConfig(level=logging.INFO)
+import logging;
+
+logging.basicConfig(level=logging.INFO)
 import json
 
 from google.protobuf.json_format import MessageToDict
@@ -23,12 +25,14 @@ import utils
 
 with open('data/articles.json', 'r') as f:
     _articles = json.load(f)
+
+
 def enterprise_search(
-    project_id: str,
-    search_engine_id: str,
-    search_query: str,
-    location: str = 'global',
-    serving_config_id: str = 'default_config',
+        project_id: str,
+        search_engine_id: str,
+        search_query: str,
+        location: str = 'global',
+        serving_config_id: str = 'default_config',
 ) -> List[discoveryengine.SearchResponse.SearchResult]:
     """Query Enterprise Search"""
     # Create a client
@@ -50,12 +54,14 @@ def enterprise_search(
         page_size=3,
         serving_config=serving_config,
         query=search_query,
-        content_search_spec = summary_expansion
+        content_search_spec=summary_expansion
     )
 
     return client.search(request)
 
-def _get_sources(response) -> List[str]:
+
+def _get_sources(response) -> list[(str, str)]:
+    """Return list of (title, url) tuples for sources"""
     sources = []
     for result in response.results:
         doc_info = MessageToDict(result.document._pb)
@@ -67,11 +73,11 @@ def _get_sources(response) -> List[str]:
                 file_name = doc_info.get('derivedStructData').get('link').split('/')[-1]
                 for article in _articles:
                     if file_name.startswith(article['download'].split('/')[-1]):
-                        source = f'[{article["title"]}]({article["ncbi_ref"]})'
-                        sources.append(source)
+                        sources.append((article["title"], article["ncbi_ref"], article["download"]))
     return sources
 
-def generate_answer(query:str) -> dict:
+
+def generate_answer(query: str) -> dict:
     response = enterprise_search(
         project_id=utils.get_env_project_id(),
         search_engine_id=utils.get_search_engine_id(),

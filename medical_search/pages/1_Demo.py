@@ -16,6 +16,7 @@ import streamlit as st
 from st_aggrid import GridOptionsBuilder, AgGrid, ColumnsAutoSizeMode
 
 from retrieval import generate_answer
+import utils
 
 st.set_page_config(
     page_title="Q&A over Biomedical Literature",
@@ -54,7 +55,7 @@ with cols[2]:
 
 st.divider()
 
-df = pd.DataFrame(sources, columns=['title', 'download'])
+df = pd.DataFrame(sources, columns=['title', 'ncbi_ref', 'download'])
 gb = GridOptionsBuilder.from_dataframe(df[['title']])
 gb.configure_selection()
 gb.configure_column('title', header_name="Sources")
@@ -68,6 +69,11 @@ if sources:
         gridOptions=gridOptions,
         columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW)
 
+    selected_rows = data["selected_rows"]
+
+    if len(selected_rows) != 0:
+        st.markdown(f"*NCBI REF:* {selected_rows[0]['ncbi_ref']}")
+        st.markdown(utils.show_pdf(selected_rows[0]['download']), unsafe_allow_html=True)
 
 else:
     st.caption('No Sources')
