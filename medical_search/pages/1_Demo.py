@@ -11,8 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pandas as pd
 import streamlit as st
+from st_aggrid import GridOptionsBuilder, AgGrid, ColumnsAutoSizeMode
 
 from retrieval import generate_answer
 
@@ -53,11 +54,19 @@ with cols[2]:
 
 st.divider()
 
+df = pd.DataFrame(sources, columns=['title', 'download'])
+gb = GridOptionsBuilder.from_dataframe(df[['title']])
+gb.configure_selection()
+gb.configure_column('title', header_name="Sources")
+gridOptions = gb.build()
+
+
 if sources:
-    # TODO: Render sources is agrid with preview
-    st.caption("Sources:")
-    for source in sources:
-        st.markdown(source)
+    data = AgGrid(
+        df,
+        height=150,
+        gridOptions=gridOptions,
+        columns_auto_size_mode=ColumnsAutoSizeMode.FIT_ALL_COLUMNS_TO_VIEW)
 
 
 else:
