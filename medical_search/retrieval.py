@@ -47,21 +47,21 @@ def enterprise_search(
         serving_config=serving_config_id,
     )
 
-    summary_expansion = discoveryengine.SearchRequest.ContentSearchSpec()
-    summary_expansion.summary_spec.summary_result_count = 3
-    summary_expansion.snippet_spec.max_snippet_count = 3
+    search_spec = discoveryengine.SearchRequest.ContentSearchSpec()
+    search_spec.summary_spec.summary_result_count = 3
+    search_spec.snippet_spec.max_snippet_count = 3
     request = discoveryengine.SearchRequest(
         page_size=3,
         serving_config=serving_config,
         query=search_query,
-        content_search_spec=summary_expansion
+        content_search_spec=search_spec
     )
 
     return client.search(request)
 
 
-def _get_sources(response) -> list[(str, str)]:
-    """Return list of (title, url) tuples for sources"""
+def _get_sources(response) -> list[(str, str, str, list)]:
+    """Return list of tuples for sources"""
     sources = []
     for result in response.results:
         doc_info = MessageToDict(result.document._pb)
@@ -73,7 +73,12 @@ def _get_sources(response) -> list[(str, str)]:
                 file_name = doc_info.get('derivedStructData').get('link').split('/')[-1]
                 for article in _articles:
                     if file_name.startswith(article['download'].split('/')[-1]):
-                        sources.append((article["title"], article["ncbi_ref"], article["download"]))
+                        sources.append((
+                            article["title"],
+                            article["ncbi_ref"],
+                            article["download"],
+                            content))
+                        break
     return sources
 
 
