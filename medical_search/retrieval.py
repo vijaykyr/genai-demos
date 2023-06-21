@@ -13,20 +13,38 @@
 # limitations under the License.
 from __future__ import annotations
 
-import logging; logging.basicConfig(level=logging.INFO)
+import logging
+#logging.basicConfig(level=logging.INFO)
+import json
 
+import streamlit as st
 from google.protobuf.json_format import MessageToDict
 from google.cloud import discoveryengine
-
+from google.cloud.discoveryengine_v1beta.services.search_service.pagers import SearchPager
+from google.cloud.discoveryengine_v1beta.services.document_service.pagers import ListDocumentsPager
 import utils
 
-def enterprise_search(
+
+def enterprise_search_list_docs(
+        project_id: str,
+        search_engine_id: str,
+        location: str = 'global',
+) -> ListDocumentsPager:
+    """List Enterprise Search Corpus"""
+    client = discoveryengine.DocumentServiceClient()
+    parent = "projects/" + project_id + "/locations/" + location + "/dataStores/" + \
+             search_engine_id + "/branches/default_branch"
+    request = discoveryengine.ListDocumentsRequest(parent=parent)
+    return client.list_documents(request=request)
+
+
+def enterprise_search_query(
         project_id: str,
         search_engine_id: str,
         search_query: str,
         location: str = 'global',
         serving_config_id: str = 'default_config',
-) -> list[discoveryengine.SearchResponse.SearchResult]:
+) -> SearchPager:
     """Query Enterprise Search"""
     # Create a client
     client = discoveryengine.SearchServiceClient()
@@ -53,8 +71,8 @@ def enterprise_search(
     return client.search(request)
 
 
-def _get_sources(response) -> list[(str, str, str, list)]:
-    """Return list of tuples for sources"""
+def _get_sources(response: SearchPager) -> list[(str, str, str, list)]:
+    """Parse ES response and generate list of tuples for sources"""
     sources = []
     for result in response.results:
         doc_info = MessageToDict(result.document._pb)
@@ -72,7 +90,7 @@ def _get_sources(response) -> list[(str, str, str, list)]:
 
 
 def generate_answer(query: str) -> dict:
-    response = enterprise_search(
+    response = enterprise_search_query(
         project_id=utils.get_env_project_id(),
         search_engine_id=utils.get_search_engine_id(),
         search_query=query)
@@ -81,3 +99,15 @@ def generate_answer(query: str) -> dict:
     result['sources'] = _get_sources(response)
     logging.info(result['sources'])
     return result
+
+
+@st.cache_data
+def get_corpus() -> list[dict]:
+    corpus = []
+    docs = enterprise_search_list_docs(
+        project_id=utils.get_env_project_id(),
+        search_engine_id=utils.get_search_engine_id())
+    for doc in docs:
+        corpus.append(json.loads(doc.json_data))
+    logging.info(corpus)
+    return corpus
