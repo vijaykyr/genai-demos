@@ -42,7 +42,7 @@ def get_search_engine_id() -> str:
     """Returns the Search Engine ID from GAE or Cloud Run"""
     search_engine_id = os.getenv('SEARCH_ENGINE_ID')
     if not search_engine_id:
-        search_engine_id = 'bioasq_0'
+        search_engine_id = 'bioasq-metadata_1687291228726'
     return search_engine_id
 
 

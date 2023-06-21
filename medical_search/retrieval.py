@@ -13,19 +13,12 @@
 # limitations under the License.
 from __future__ import annotations
 
-import logging;
-
-logging.basicConfig(level=logging.INFO)
-import json
+import logging; logging.basicConfig(level=logging.INFO)
 
 from google.protobuf.json_format import MessageToDict
 from google.cloud import discoveryengine
 
 import utils
-
-with open('data/articles.json', 'r') as f:
-    _articles = json.load(f)
-
 
 def enterprise_search(
         project_id: str,
@@ -33,7 +26,7 @@ def enterprise_search(
         search_query: str,
         location: str = 'global',
         serving_config_id: str = 'default_config',
-) -> List[discoveryengine.SearchResponse.SearchResult]:
+) -> list[discoveryengine.SearchResponse.SearchResult]:
     """Query Enterprise Search"""
     # Create a client
     client = discoveryengine.SearchServiceClient()
@@ -69,16 +62,12 @@ def _get_sources(response) -> list[(str, str, str, list)]:
             content = [snippet.get('snippet') for snippet in
                        doc_info.get('derivedStructData', {}).get('snippets', []) if
                        snippet.get('snippet') is not None]
-            if content:
-                file_name = doc_info.get('derivedStructData').get('link').split('/')[-1]
-                for article in _articles:
-                    if file_name.startswith(article['download'].split('/')[-1]):
-                        sources.append((
-                            article["title"],
-                            article["ncbi_ref"],
-                            article["download"],
-                            content))
-                        break
+            metadata = doc_info.get('structData')
+            sources.append((
+                metadata["title"],
+                metadata["ncbi_ref"],
+                metadata["download"],
+                content))
     return sources
 
 
