@@ -22,8 +22,8 @@ streamlit run About.py
 ## Deploy to App Engine
 
 Ensure the default App Engine service account has the following IAM permissions:
-- Log Writer
-- Storage Object Viewer
+- Discovery Engine Editor
+- Discovery Engine Service Agent
 
 Set the environment variables in `app.yaml`
 ```yaml
