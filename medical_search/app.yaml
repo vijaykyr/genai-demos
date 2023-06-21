@@ -7,6 +7,5 @@ runtime_config:
 
 entrypoint: streamlit run About.py --server.port $PORT
 
-# The App Engine Service Account Requires the Following Permissions
-# -Logs Writer
-# -Storage Object Viewer
+env_variables:
+    SEARCH_ENGINE_ID: your-enterprise-search-engine-id

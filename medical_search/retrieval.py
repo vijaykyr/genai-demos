@@ -91,8 +91,8 @@ def _get_sources(response: SearchPager) -> list[(str, str, str, list)]:
 
 def generate_answer(query: str) -> dict:
     response = enterprise_search_query(
-        project_id=utils.get_env_project_id(),
-        search_engine_id=utils.get_search_engine_id(),
+        project_id=utils.PROJECT_ID,
+        search_engine_id=utils.SEARCH_ENGINE_ID,
         search_query=query)
     result = {}
     result['answer'] = response.summary.summary_text
@@ -105,8 +105,8 @@ def generate_answer(query: str) -> dict:
 def get_corpus() -> list[dict]:
     corpus = []
     docs = enterprise_search_list_docs(
-        project_id=utils.get_env_project_id(),
-        search_engine_id=utils.get_search_engine_id())
+        project_id=utils.PROJECT_ID,
+        search_engine_id=utils.SEARCH_ENGINE_ID)
     for doc in docs:
         corpus.append(json.loads(doc.json_data))
     logging.info(corpus)
