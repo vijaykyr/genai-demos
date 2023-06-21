@@ -85,6 +85,7 @@ def _get_sources(response: SearchPager) -> list[(str, str, str, list)]:
                 metadata["title"],
                 metadata["ncbi_ref"],
                 metadata["download"],
+                doc_info.get('derivedStructData')['link'],
                 content))
     return sources
 
@@ -108,6 +109,8 @@ def get_corpus() -> list[dict]:
         project_id=utils.PROJECT_ID,
         search_engine_id=utils.SEARCH_ENGINE_ID)
     for doc in docs:
-        corpus.append(json.loads(doc.json_data))
+        metadata = json.loads(doc.json_data)
+        metadata['gcs_uri'] = doc.content.uri
+        corpus.append(metadata)
     logging.info(corpus)
     return corpus

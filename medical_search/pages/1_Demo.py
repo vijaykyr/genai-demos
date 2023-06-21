@@ -64,7 +64,7 @@ with cols[2]:
 
 st.divider()
 
-df = pd.DataFrame(sources, columns=['title', 'ncbi_ref', 'download', 'content'])
+df = pd.DataFrame(sources, columns=['title', 'ncbi_ref', 'download', 'gcs_uri', 'content'])
 gb = GridOptionsBuilder.from_dataframe(df[['title']])
 gb.configure_selection()
 gb.configure_column('title', header_name="Sources (click to expand)")
@@ -83,7 +83,7 @@ if sources:
     if len(selected_rows) != 0:
         st.markdown(f"**NCBI Reference:** {selected_rows[0]['ncbi_ref']}")
         with st.expander('View Paper', expanded=False):
-            st.markdown(utils.show_pdf(selected_rows[0]['download']), unsafe_allow_html=True)
+            st.markdown(utils.show_pdf(selected_rows[0]['gcs_uri']), unsafe_allow_html=True)
         st.markdown('**Relevant Snippets**')
         for snippet in selected_rows[0]['content']:
             st.markdown(f'- {snippet}', unsafe_allow_html=True)

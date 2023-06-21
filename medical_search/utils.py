@@ -12,17 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import os
-import requests
 import base64
+import os
+import re
+
+from google.cloud import storage
 
 PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 SEARCH_ENGINE_ID = os.environ['SEARCH_ENGINE_ID']
 
-def show_pdf(url):
-    pdf_file = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})  # Need to override default header because
-    # server blocks scrapers (https://scrapeops.io/web-scraping-playbook/403-forbidden-error-web-scraping/)
-    base64_pdf = base64.b64encode(pdf_file.content).decode('utf-8')
+def show_pdf(uri: str) -> str:
+    """Given gs:// uri, return html code to embed pdf in iframe"""
+    pdf_file = download_from_gcs(uri)
+    base64_pdf = base64.b64encode(pdf_file).decode('utf-8')
     pdf_iframe = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="800" height="800" type="application/pdf"></iframe>'
     return pdf_iframe
+
+def download_from_gcs(uri: str) -> bytes:
+    """Given gs:// uri, download file"""
+    client = storage.Client()
+    matches = re.search(r'gs://(.*?)/(.*)', uri)
+    bucket_name, object_name = matches.group(1), matches.group(2)
+    blob = client.bucket(bucket_name).blob(object_name)
+    return blob.download_as_string()

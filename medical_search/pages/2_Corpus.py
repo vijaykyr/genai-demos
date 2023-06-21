@@ -30,4 +30,4 @@ selected_rows = data["selected_rows"]
 
 if len(selected_rows) != 0:
     st.markdown(f"*NCBI REF:* {selected_rows[0]['ncbi_ref']}")
-    st.markdown(utils.show_pdf(selected_rows[0]['download']), unsafe_allow_html=True)
+    st.markdown(utils.show_pdf(selected_rows[0]['gcs_uri']), unsafe_allow_html=True)
