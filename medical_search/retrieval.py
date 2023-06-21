@@ -32,8 +32,8 @@ def enterprise_search_list_docs(
 ) -> ListDocumentsPager:
     """List Enterprise Search Corpus"""
     client = discoveryengine.DocumentServiceClient()
-    parent = "projects/" + project_id + "/locations/" + location + "/dataStores/" + \
-             search_engine_id + "/branches/default_branch"
+    parent = "projects/" + project_id + "/locations/" + location + \
+        "/collections/default_collection/dataStores/" + search_engine_id + "/branches/default_branch"
     request = discoveryengine.ListDocumentsRequest(parent=parent)
     return client.list_documents(request=request)
 
