@@ -1,8 +1,5 @@
-streamlit
-streamlit-aggrid
-urllib3==1.26.6 #downgrading was needed to run locally, can probably remove for cloud
-google-api-python-client
-google-cloud-storage
-pandas
-google-cloud-discoveryengine
-google-cloud-aiplatform
+streamlit==1.23.1
+streamlit-aggrid==0.3.4.post3
+pandas==2.0.2
+google-cloud-discoveryengine==0.9.0
+google-cloud-aiplatform==1.26.0
