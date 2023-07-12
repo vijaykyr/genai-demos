@@ -2,7 +2,7 @@
 
 Demonstrates using Enterprise Search for Q&A on a biomedical corpus with citations.  
 
-[TODO: Add architecture diagram]
+![Architecture](https://github.com/vijaykyr/genai-demos/blob/main/medical_search/app/images/architecture.png "Architecture")
 
 ## Deploy Locally
 Set environment variables
